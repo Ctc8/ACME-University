@@ -3,13 +3,21 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<link rel="stylesheet" href="/static/style.css" />
+		<title>Login</title>
 	</head>
 	<body>
-		<form action="http://localhost:5000/login" method="post">
-			<p>Enter your name:</p>
-			<p><input type="text" name="nm" /></p>
-			<p><input type="submit" value="submit" /></p>
+		<h2>ACME University</h2>
+		<form action="http://localhost:5001/login" method="post">
+			<p>Username:</p>
+			<p><input type="text" name="username" required /></p>
+			<p>Password:</p>
+			<p><input type="password" name="password" required /></p>
+			<p><input type="submit" value="Login" /></p>
+			<p><a href="{{ url_for('signup') }}" class="button">Sign Up</a></p>
+			{% if error %}
+			<p class="error">{{ error }}</p>
+			{% endif %}
 		</form>
 	</body>
 </html>
