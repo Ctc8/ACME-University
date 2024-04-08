@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from flask import Flask
 
 app = Flask(__name__)
@@ -19,7 +18,7 @@ def name(name):
  
 if __name__ == '__main__':
   app.run()
-=======
+
 from flask import Flask, request, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_user, LoginManager, UserMixin, login_required, current_user, logout_user
@@ -104,4 +103,4 @@ def login():
 
 if __name__ == "__main__":
   app.run(debug=True, port=5001)
->>>>>>> studentlogin
+
