@@ -93,14 +93,10 @@ def login():
   return render_template('login.html', error=error, signup_url=signup_url)
 
 if __name__ == "__main__":
-<<<<<<< HEAD
   app.run(debug=True, port=5001)
-
-=======
-    with app.app_context():
-        ahepworth_user = User.query.filter_by(username='ahepworth').first()
-        if ahepworth_user:
-            ahepworth_user.is_admin = True
-            db.session.commit()
-    app.run(debug=True, port=5001)
->>>>>>> adminlogin
+  with app.app_context():
+    ahepworth_user = User.query.filter_by(username='ahepworth').first()
+    if ahepworth_user:
+      ahepworth_user.is_admin = True
+      db.session.commit()
+  app.run(debug=True, port=5001)
