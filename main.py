@@ -43,6 +43,8 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
+    if current_user.is_admin:
+       return redirect(url_for('admin.index'))
     return render_template('index.html', user=current_user)
 
 @app.route('/signup', methods=['GET', 'POST'])
