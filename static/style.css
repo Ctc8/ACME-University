@@ -67,3 +67,40 @@ a.button {
 a.button:hover {
   background-color: #007d08;
 }
+
+.tabs {
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
+.tab-link {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-link.active, .tab-link:hover {
+  border-bottom: 2px solid #555;
+}
+
+.tab-content {
+  display: none;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-top: none;
+  background-color: #fff;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}

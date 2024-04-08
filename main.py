@@ -13,6 +13,19 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+user_courses = db.Table('user_courses',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('course_id', db.Integer, db.ForeignKey('course.id'), primary_key=True)
+)
+
+class Course(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    teacher = db.Column(db.String(100), nullable=False)
+    time = db.Column(db.String(50), nullable=False)
+    capacity = db.Column(db.Integer, nullable=False)
+    students = db.relationship('User', secondary=user_courses, backref=db.backref('courses', lazy='dynamic'))
+
 class User(UserMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(30), unique=True) 
@@ -34,7 +47,20 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('index.html', user=current_user)
+  user_courses = current_user.courses
+  all_courses = Course.query.all()
+  available_courses = [course for course in all_courses if course not in user_courses]
+  user_courses = current_user.courses
+  courses_info = [{
+        'id': course.id,
+        'name': course.name,
+        'teacher': course.teacher,
+        'time': course.time,
+        'student_count': len(course.students),
+        'capacity': course.capacity
+    } for course in user_courses]
+  
+  return render_template('index.html', user=current_user, courses_info=courses_info)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
