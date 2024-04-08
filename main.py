@@ -35,8 +35,7 @@ admin.add_view(AdminModelView(User, db.session))
 def home():
   return render_template('login.html', user=current_user)
 
-@app.route('/logout')
-@login_required
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     logout_user()
     return redirect(url_for('login'))
