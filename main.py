@@ -27,7 +27,6 @@ class AdminModelView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated and current_user.is_admin
 
-# admin = Admin(app, name='My App', template_mode='bootstrap3', base_template='admin/my_master.html')
 admin = Admin(app, name='Admin', template_mode='bootstrap3')
 admin.add_view(AdminModelView(User, db.session))
 
@@ -35,8 +34,7 @@ admin.add_view(AdminModelView(User, db.session))
 def home():
   return render_template('login.html', user=current_user)
 
-@app.route('/logout')
-@login_required
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     logout_user()
     return redirect(url_for('login'))
