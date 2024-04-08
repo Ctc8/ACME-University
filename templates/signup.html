@@ -8,12 +8,13 @@
 </head>
 <body>
   <h2>ACME University</h2>
-  <form action="http://localhost:5001/login" method="post">
+  <form action="http://localhost:5001/signup" method="post">
     <p>Username:</p>
     <p><input type="text" name="username" required /></p>
     <p>Password:</p>
     <p><input type="password" name="password" required /></p>
     <p><input type="submit" value="Sign Up" /></p>
+    <p><a href="{{ url_for('login') }}" class="button">Go back to login</a></p>
   </form>
 </body>
 </html>

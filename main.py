@@ -31,6 +31,7 @@ def dashboard():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    error = None
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -38,13 +39,16 @@ def signup():
         user = User.query.filter_by(username=username).first()
 
         if user:
-            return redirect(url_for('signup'))
+            error = 'Username is already taken'
+            return render_template('signup.html', error=error)
 
         new_user = User(username=username, password=password)
         db.session.add(new_user)
         db.session.commit()
 
-        return redirect(url_for('login'))
+        login_user(new_user)
+
+        return redirect(url_for('dashboard'))
 
     return render_template('signup.html')
 
@@ -67,7 +71,8 @@ def login():
 
     error = 'Invalid username or password'
 
-  return render_template('login.html', error=error)
+  signup_url = url_for('signup')
+  return render_template('login.html', error=error, signup_url=signup_url)
 
 if __name__ == "__main__":
   app.run(debug=True, port=5001)
