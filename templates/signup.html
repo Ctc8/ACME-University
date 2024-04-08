@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/style.css">
+  <title>Sign Up page</title>
+</head>
+<body>
+  <h2>ACME University</h2>
+  <form action="http://localhost:5001/signup" method="post">
+    <p>Username:</p>
+    <p><input type="text" name="username" required /></p>
+    <p>Password:</p>
+    <p><input type="password" name="password" required /></p>
+    <p><input type="submit" value="Sign Up" /></p>
+    <p><a href="{{ url_for('login') }}" class="button">Go back to login</a></p>
+  </form>
+</body>
+</html>
