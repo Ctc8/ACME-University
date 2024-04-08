@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import login_user, LoginManager, UserMixin, login_required
+from flask_login import login_user, LoginManager, UserMixin, login_required, current_user, logout_user
 
 app = Flask(__name__)
 
@@ -22,12 +22,18 @@ with app.app_context():
 
 @app.route('/')
 def home():
-  return render_template('login.html')
+  return render_template('login.html', user=current_user)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('index.html')
+    return render_template('index.html', user=current_user)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
