@@ -1,0 +1,69 @@
+body {
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+
+form {
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+h2 {
+  color: #1877F2;
+  display: flex;
+  justify-content: center;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+h3 {
+  display: flex;
+  justify-content: center;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+form p {
+  margin-bottom: 15px;
+}
+
+input[type="text"], input[type="password"] {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+form input[type="submit"] {
+  background-color: #007BFF;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
+
+form input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: red;
+}
+
+a.button {
+  display: flex;
+  justify-content: center;
+  padding: 10px 20px; 
+  color: white;
+  background-color: #02a70d;
+  text-decoration: none; 
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8em; 
+}
+
+a.button:hover {
+  background-color: #007d08;
+}
