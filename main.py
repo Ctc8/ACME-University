@@ -1,6 +1,8 @@
 from flask import Flask, request, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_user, LoginManager, UserMixin, login_required, current_user, logout_user
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 app = Flask(__name__)
 
@@ -16,9 +18,17 @@ class User(UserMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(30), unique=True) 
   password = db.Column(db.String(30))  
+  is_admin = db.Column(db.Boolean, default=False)
 
 with app.app_context():
     db.create_all()
+
+class AdminModelView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_admin
+
+admin = Admin(app, name='Admin', template_mode='bootstrap3')
+admin.add_view(AdminModelView(User, db.session))
 
 @app.route('/')
 def home():
@@ -81,4 +91,9 @@ def login():
   return render_template('login.html', error=error, signup_url=signup_url)
 
 if __name__ == "__main__":
-  app.run(debug=True, port=5001)
+    with app.app_context():
+        ahepworth_user = User.query.filter_by(username='ahepworth').first()
+        if ahepworth_user:
+            ahepworth_user.is_admin = True
+            db.session.commit()
+    app.run(debug=True, port=5001)
