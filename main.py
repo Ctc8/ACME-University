@@ -4,6 +4,10 @@ from flask_login import login_user, LoginManager, UserMixin, login_required, cur
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
+from flask_wtf import FlaskForm
+from wtforms import IntegerField, SubmitField
+from wtforms.validators import NumberRange
+
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///db.sqlite3"
@@ -19,6 +23,10 @@ user_courses = db.Table('user_courses',
     db.Column('course_id', db.Integer, db.ForeignKey('course.id'), primary_key=True)
 )
 
+class GradeForm(FlaskForm):
+    grade = IntegerField('Grade', validators=[NumberRange(min=0, max=100)])
+    submit = SubmitField('Update Grade')
+
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -31,7 +39,16 @@ class User(UserMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(30), unique=True) 
   password = db.Column(db.String(30))  
+  
   is_admin = db.Column(db.Boolean, default=False)
+
+class Grade(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    grade = db.Column(db.Integer, nullable=False)
+    course = db.relationship('Course', backref=db.backref('grades', cascade='all, delete-orphan'))
+    user = db.relationship('User', backref=db.backref('grades', cascade='all, delete-orphan'))
 
 with app.app_context():
     db.create_all()
@@ -59,20 +76,28 @@ def dashboard():
     if current_user.is_admin:
         return redirect(url_for('admin.index'))
     
-    all_courses_info = []
-    for course in Course.query.all():
-        is_enrolled = course in current_user.courses
-        all_courses_info.append({
-            'id': course.id,
-            'name': course.name,
-            'teacher': course.teacher,
-            'time': course.time,
-            'student_count': len(course.students),
-            'capacity': course.capacity,
-            'is_enrolled': is_enrolled
-        })
+    all_courses = Course.query.all()
+    available_courses_info = [{
+        'id': course.id,
+        'name': course.name,
+        'teacher': course.teacher,
+        'time': course.time,
+        'student_count': len(course.students),
+        'capacity': course.capacity
+    } for course in all_courses if course not in current_user.courses]
 
-    return render_template('dashboard.html', user=current_user, all_courses_info=all_courses_info)
+    enrolled_courses_info = [{
+        'id': course.id,
+        'name': course.name,
+        'teacher': course.teacher,
+        'time': course.time,
+        'student_count': len(course.students),
+        'capacity': course.capacity
+    } for course in current_user.courses]
+    
+    return render_template('dashboard.html', user=current_user, 
+                           available_courses=available_courses_info, 
+                           courses_info=enrolled_courses_info)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -97,6 +122,66 @@ def signup():
 
     return render_template('signup.html')
 
+# 
+@app.route('/teacherdashboard')
+def teacherdashboard():
+    if current_user.is_admin:
+        return redirect(url_for('admin.index'))
+    
+    all_courses = Course.query.all()
+    available_courses_info = [{
+        'id': course.id,
+        'name': course.name,
+        'teacher': course.teacher,
+        'time': course.time,
+        'student_count': len(course.students),
+        'capacity': course.capacity
+    } for course in all_courses if course not in current_user.courses]
+
+    teaching_courses_info = [{
+        'id': course.id,
+        'name': course.name,
+        'teacher': course.teacher,
+        'time': course.time,
+        'student_count': len(course.students),
+        'capacity': course.capacity
+    } for course in all_courses if course.teacher == current_user.username]
+    
+    return render_template('teacherdashboard.html', user=current_user, 
+                           available_courses=available_courses_info, 
+                           courses_info=teaching_courses_info)
+#
+
+@app.route('/update_grade/<int:course_id>/<int:student_id>', methods=['POST'])
+@login_required
+def update_grade(course_id, student_id):
+    grade_value = request.form.get('grade')
+    course = Course.query.get(course_id)
+    student = User.query.get(student_id)
+    if course is None or student is None:
+        abort(404)
+    
+    grade = Grade.query.filter_by(course_id=course_id, user_id=student_id).first()
+    if grade:
+        grade.grade = grade_value
+    else:
+        grade = Grade(course_id=course_id, user_id=student_id, grade=grade_value)
+        db.session.add(grade)
+
+    db.session.commit()
+    flash('Grade updated successfully.')
+    return redirect(url_for('course_students', course_id=course_id))
+
+@app.route('/course_students/<int:course_id>')
+@login_required
+def course_students(course_id):
+    course = Course.query.get(course_id)
+    if course is None:
+        abort(404)
+    students = course.students
+    grades = {student.id: Grade.query.filter_by(course_id=course_id, user_id=student.id).first() for student in students}
+    return render_template('course_students.html', course=course, students=students, grades=grades, grade_form=GradeForm())
+
 @login_manager.user_loader
 def load_user(user_id):
   return User.query.get(int(user_id))
@@ -108,11 +193,14 @@ def login():
     username = request.form.get('username')
     password = request.form.get('password')
 
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter_by(username=username).first()    
 
     if user and user.password == password:  
       login_user(user)
-      return redirect(url_for('dashboard'))
+      if username == 'ahepworth' or username == 'swalker' or username == 'rjenkins':
+          return redirect(url_for('teacherdashboard'))
+      else:
+          return redirect(url_for('dashboard'))
 
     error = 'Invalid username or password'
 
@@ -133,19 +221,6 @@ def enroll_course(course_id):
     else:
         flash('Course not found or already enrolled.', 'error')
     return redirect(url_for('dashboard'))
-
-@app.route('/drop_course/<int:course_id>', methods=['POST'])
-@login_required
-def drop_course(course_id):
-    course = Course.query.get(course_id)
-    if course and course in current_user.courses:
-        current_user.courses.remove(course)
-        db.session.commit()
-        flash('You have been dropped from the course.', 'success')
-    else:
-        flash('Course not found or not enrolled.', 'error')
-    return redirect(url_for('dashboard'))
-
 
 
 if __name__ == "__main__":
