@@ -2,6 +2,8 @@
 from flask import Flask, request, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_user, LoginManager, UserMixin, login_required, current_user, logout_user
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 app = Flask(__name__)
 
@@ -30,16 +32,23 @@ class User(UserMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(30), unique=True) 
   password = db.Column(db.String(30))  
+  is_admin = db.Column(db.Boolean, default=False)
 
 with app.app_context():
     db.create_all()
+
+class AdminModelView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_admin
+
+admin = Admin(app, name='Admin', template_mode='bootstrap3')
+admin.add_view(AdminModelView(User, db.session))
 
 @app.route('/')
 def home():
   return render_template('login.html', user=current_user)
 
-@app.route('/logout')
-@login_required
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     logout_user()
     return redirect(url_for('login'))
@@ -47,11 +56,14 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-  user_courses = current_user.courses
-  all_courses = Course.query.all()
-  available_courses = [course for course in all_courses if course not in user_courses]
-  user_courses = current_user.courses
-  courses_info = [{
+    if current_user.is_admin:
+        return redirect(url_for('admin.index'))
+    
+    user_courses = current_user.courses
+    all_courses = Course.query.all()
+    available_courses = [course for course in all_courses if course not in user_courses]
+
+    courses_info = [{
         'id': course.id,
         'name': course.name,
         'teacher': course.teacher,
@@ -59,9 +71,9 @@ def dashboard():
         'student_count': len(course.students),
         'capacity': course.capacity
     } for course in user_courses]
+    
+    return render_template('dashboard.html', user=current_user, courses_info=courses_info, available_courses=available_courses)
   
-  return render_template('index.html', user=current_user, courses_info=courses_info)
-
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     error = None
@@ -107,6 +119,17 @@ def login():
   signup_url = url_for('signup')
   return render_template('login.html', error=error, signup_url=signup_url)
 
+@app.route('/enroll_course/<int:course_id>', methods=['POST'])
+def enroll_course(course_id):
+    # Implementation of enrollment logic
+    return redirect(url_for('dashboard'))
+
+
 if __name__ == "__main__":
   app.run(debug=True, port=5001)
-
+  with app.app_context():
+    ahepworth_user = User.query.filter_by(username='ahepworth').first()
+    if ahepworth_user:
+      ahepworth_user.is_admin = True
+      db.session.commit()
+  app.run(debug=True, port=5001)
