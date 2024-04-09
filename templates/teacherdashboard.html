@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/style.css">
+  <title>Dashboard</title>
+</head>
+<body>
+  <h2>ACME University</h2>
+  <h3>Welcome to your dashboard, {{ user.username }}!</h3>
+  <p>This is the teacher dashboard.</p>
+
+  {% if user.is_admin %}
+  <p><a href="{{ url_for('admin.index') }}">Admin Dashboard</a></p>
+  {% endif %}
+
+  <p><a href="{{ url_for('logout') }}">Logout</a></p>
+
+  <div class="tabs">
+    <button class="tab-link" onclick="openTab(event, 'EnrolledCourses')" id="defaultOpen">Courses You Teach</button>
+    <!-- <button class="tab-link" onclick="openTab(event, 'AddCourses')">Add Courses</button> -->
+  </div>
+
+<div id="EnrolledCourses" class="tab-content">
+  <h3>Courses You Teach</h3>
+  {% if courses_info %}
+  <table>
+    <thead>
+      <tr>
+        <th>Course Name</th>
+        <th>Teacher</th>
+        <th>Time</th>
+        <th>Students Enrolled</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for course in courses_info %}
+      <tr>
+        <td><a href="{{ url_for('course_students', course_id=course['id']) }}">{{ course['name'] }}</a></td>
+        <td>{{ course['teacher'] }}</td>
+        <td>{{ course['time'] }}</td>
+        <td>{{ course['student_count'] }}/{{ course['capacity'] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>You are not teaching any courses.</p>
+  {% endif %}
+</div>
+
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
