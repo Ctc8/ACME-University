@@ -27,7 +27,6 @@
               <th>Teacher</th>
               <th>Time</th>
               <th>Students Enrolled</th>
-              <th>Capacity</th>
           </tr>
       </thead>
       <tbody>
@@ -36,8 +35,8 @@
               <td>{{ course['name'] }}</td>
               <td>{{ course['teacher'] }}</td>
               <td>{{ course['time'] }}</td>
-              <td>{{ course['student_count'] }}</td>
-              <td>{{ course['capacity'] }}</td>
+              <td>{{ course['student_count'] }}/{{ course['capacity'] }}</td> <!-- Combined Data -->
+
           </tr>
           {% endfor %}
       </tbody>
@@ -57,7 +56,6 @@
             <th>Teacher</th>
             <th>Time</th>
             <th>Students Enrolled</th>
-            <th>Capacity</th>
           </tr>
       </thead>
       <tbody>
@@ -66,8 +64,8 @@
             <td>{{ course['name'] }}</td>
             <td>{{ course['teacher'] }}</td>
             <td>{{ course['time'] }}</td>
-            <td>{{ course['student_count'] }}</td>
-            <td>{{ course['capacity'] }}</td>
+            <td>{{ course['student_count'] }}/{{ course['capacity'] }}</td> <!-- Combined Data -->
+
               <td>
                   <form action="{{ url_for('enroll_course', course_id=course.id) }}" method="post">
                       <button type="submit">Add</button>
