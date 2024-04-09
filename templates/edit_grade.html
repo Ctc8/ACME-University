@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Grade</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- {% block content %} -->
+    <h1>Edit Grade</h1>
+    <form method="POST">
+      <label for="grade">Grade</label>
+      <input type="number" id="grade" name="grade" value="{{ grade.grade }}">
+      <input type="submit" value="Update Grade">
+    </form>
+    <!-- {% endblock %} -->
+</body>
+</html>
