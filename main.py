@@ -3,12 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_user, LoginManager, UserMixin, login_required, current_user, logout_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///db.sqlite3"
 app.config['SECRET_KEY'] = "secretkey"
 app.config['LOGIN_VIEW'] = 'login'
+
 
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -32,6 +34,7 @@ class User(UserMixin, db.Model):
   username = db.Column(db.String(30), unique=True) 
   password = db.Column(db.String(30))  
   is_admin = db.Column(db.Boolean, default=False)
+  is_teacher = db.Column(db.Boolean, default=False)
 
 with app.app_context():
     db.create_all()
@@ -77,6 +80,11 @@ def dashboard():
         'student_count': len(course.students),
         'capacity': course.capacity
     } for course in current_user.courses]
+
+    if current_user.is_teacher:
+        return render_template('teacher_dashboard.html', user=current_user, 
+                           available_courses=available_courses_info, 
+                           courses_info=enrolled_courses_info)
     
     return render_template('dashboard.html', user=current_user, 
                            available_courses=available_courses_info, 
@@ -150,4 +158,13 @@ if __name__ == "__main__":
     if ahepworth_user:
       ahepworth_user.is_admin = True
       db.session.commit()
+
+    teacher_usernames = ['Susan Walker', 'Ammon Hepworth','Ralph Jenkins']
+        
+    for username in teacher_usernames:
+        teacher_user = User.query.filter_by(username=username).first()
+        if teacher_user:
+            teacher_user.is_teacher = True
+            db.session.commit()
+
   app.run(debug=True, port=5001)

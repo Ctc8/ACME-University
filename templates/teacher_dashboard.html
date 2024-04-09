@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="/static/style.css">
+ <title>Dashboard</title>
+</head>
+<body>
+ <h2>ACME University</h2>
+ <h3>Welcome to your Teacher dashboard, {{ user.username }}!</h3>
+ <p>View all your classes here.</p>
+
+ {% if user.is_admin %}
+ <p><a href="{{ url_for('admin.index') }}">Admin Dashboard</a></p>
+ {% endif %}
+
+ <p><a href="{{ url_for('logout') }}">Logout</a></p>
+
+ <div class="tabs">
+    <button class="tab-link" onclick="openTab(event, 'MyCourses')" id="defaultOpen">My Courses</button>
+    <button class="tab-link" onclick="openTab(event, 'EditGrades')">Edit Grades</button>
+ </div>
+
+ <div id="MyCourses" class="tab-content">
+    <h3>Courses I'm Teaching</h3>
+    {% if courses_info %}
+    <table>
+      <thead>
+        <tr>
+          <th>Course Name</th>
+          <th>Teacher</th>
+          <th>Time</th>
+          <th>Students Enrolled</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for course in courses_info %}
+        <tr>
+          <td>{{ course['name'] }}</td>
+          <td>{{ course['teacher'] }}</td>
+          <td>{{ course['time'] }}</td>
+          <td>{{ course['student_count'] }}/{{ course['capacity'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>You are not enrolled in any courses.</p>
+    {% endif %}
+ </div>
+
+ <div id="EditGrades" class="tab-content">
+    <h3>Edit Grades</h3>
+    {% for course_info in courses_with_students %}
+    <h4>{{ course_info.course.name }}</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Grade</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in course_info.students %}
+            <tr>
+                <td>{{ student.username }}</td>
+                <td>{{ course_info.grades | selectattr("user_id", "equalto", student.id) | list | first.grade }}</td>
+                <td>
+                    <form action="{{ url_for('edit_grade', course_id=course_info.course.id, student_id=student.id) }}" method="post">
+                        <input type="number" name="grade" min="0" max="100" value="{{ course_info.grades | selectattr("user_id", "equalto", student.id) | list | first.grade }}">
+                        <button type="submit">Save</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+</div>
+
+
+ <script src="/static/script.js"></script>
+</body>
+</html>
