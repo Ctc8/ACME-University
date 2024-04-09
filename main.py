@@ -59,28 +59,20 @@ def dashboard():
     if current_user.is_admin:
         return redirect(url_for('admin.index'))
     
-    all_courses = Course.query.all()
-    available_courses_info = [{
-        'id': course.id,
-        'name': course.name,
-        'teacher': course.teacher,
-        'time': course.time,
-        'student_count': len(course.students),
-        'capacity': course.capacity
-    } for course in all_courses if course not in current_user.courses]
+    all_courses_info = []
+    for course in Course.query.all():
+        is_enrolled = course in current_user.courses
+        all_courses_info.append({
+            'id': course.id,
+            'name': course.name,
+            'teacher': course.teacher,
+            'time': course.time,
+            'student_count': len(course.students),
+            'capacity': course.capacity,
+            'is_enrolled': is_enrolled
+        })
 
-    enrolled_courses_info = [{
-        'id': course.id,
-        'name': course.name,
-        'teacher': course.teacher,
-        'time': course.time,
-        'student_count': len(course.students),
-        'capacity': course.capacity
-    } for course in current_user.courses]
-    
-    return render_template('dashboard.html', user=current_user, 
-                           available_courses=available_courses_info, 
-                           courses_info=enrolled_courses_info)
+    return render_template('dashboard.html', user=current_user, all_courses_info=all_courses_info)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
