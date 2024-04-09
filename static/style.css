@@ -3,14 +3,6 @@ body {
   font-family: Arial, sans-serif;
 }
 
-form {
-  width: 300px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-}
-
 h2 {
   color: #1877F2;
   display: flex;
@@ -22,6 +14,18 @@ h3 {
   display: flex;
   justify-content: center;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.error {
+  color: red;
+}
+
+form {
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #fff;
 }
 
 form p {
@@ -47,23 +51,85 @@ form input[type="submit"]:hover {
   background-color: #0056b3;
 }
 
-.error {
-  color: red;
-}
-
 a.button {
   display: flex;
   justify-content: center;
-  padding: 10px 20px; 
+  padding: 10px 20px;
   color: white;
-  background-color: #02a70d;
-  text-decoration: none; 
+  background-color: #1877F2;
+  text-decoration: none;
   text-align: center;
   border: none;
   cursor: pointer;
-  font-size: 0.8em; 
+  font-size: 0.8em;
 }
 
 a.button:hover {
-  background-color: #007d08;
+  background-color: #1877F2;
+}
+
+.tabs, .tab-content {
+  overflow: hidden;
+  background-color: #f1f1f1;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-top: none;
+}
+
+.tab-link {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-link:hover, .tab-link.active {
+  border-bottom: 3px solid #1877F2;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 0.9em;
+  min-width: 400px;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.15);
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+th {
+  background-color: #1877F2;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+tbody tr:last-of-type {
+  border-bottom: 2px solid #1877F2;
 }

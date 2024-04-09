@@ -15,6 +15,19 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+user_courses = db.Table('user_courses',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('course_id', db.Integer, db.ForeignKey('course.id'), primary_key=True)
+)
+
+class Course(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    teacher = db.Column(db.String(100), nullable=False)
+    time = db.Column(db.String(50), nullable=False)
+    capacity = db.Column(db.Integer, nullable=False)
+    students = db.relationship('User', secondary=user_courses, backref=db.backref('courses', lazy='dynamic'))
+
 class User(UserMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(30), unique=True) 
@@ -44,9 +57,23 @@ def logout():
 @login_required
 def dashboard():
     if current_user.is_admin:
-       return redirect(url_for('admin.index'))
-    return render_template('dashboard.html', user=current_user)
+        return redirect(url_for('admin.index'))
+    
+    user_courses = current_user.courses
+    all_courses = Course.query.all()
+    available_courses = [course for course in all_courses if course not in user_courses]
 
+    courses_info = [{
+        'id': course.id,
+        'name': course.name,
+        'teacher': course.teacher,
+        'time': course.time,
+        'student_count': len(course.students),
+        'capacity': course.capacity
+    } for course in user_courses]
+    
+    return render_template('dashboard.html', user=current_user, courses_info=courses_info, available_courses=available_courses)
+  
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     error = None
@@ -92,6 +119,12 @@ def login():
   signup_url = url_for('signup')
   return render_template('login.html', error=error, signup_url=signup_url)
 
+@app.route('/enroll_course/<int:course_id>', methods=['POST'])
+def enroll_course(course_id):
+    # Implementation of enrollment logic
+    return redirect(url_for('dashboard'))
+
+
 if __name__ == "__main__":
   app.run(debug=True, port=5001)
   with app.app_context():
@@ -100,3 +133,4 @@ if __name__ == "__main__":
       ahepworth_user.is_admin = True
       db.session.commit()
   app.run(debug=True, port=5001)
+  
