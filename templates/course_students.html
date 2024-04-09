@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="/static/style.css" />
+	</head>
+	<body>
+		<h1>Students enrolled in {{ course.name }}</h1>
+		<ul>
+			{% for student in students %}
+			<li>
+				{{ student.username }} - Grade: {{ grades[student.id].grade if
+				grades[student.id] else 'N/A' }}
+				<form
+					action="{{ url_for('update_grade', course_id=course.id, student_id=student.id) }}"
+					method="post"
+				>
+					{{ grade_form.hidden_tag() }} {{ grade_form.grade.label }} {{
+					grade_form.grade() }} {{ grade_form.submit() }}
+				</form>
+			</li>
+			{% endfor %}
+		</ul>
+    <p><a href="{{ url_for('logout') }}">Logout</a></p>
+	</body>
+</html>
