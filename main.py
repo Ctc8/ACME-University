@@ -42,6 +42,7 @@ class AdminModelView(ModelView):
 
 admin = Admin(app, name='Admin', template_mode='bootstrap3')
 admin.add_view(AdminModelView(User, db.session))
+admin.add_view(AdminModelView(Course, db.session))
 
 @app.route('/')
 def home():
