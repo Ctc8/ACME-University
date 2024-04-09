@@ -53,18 +53,21 @@
   <table>
       <thead>
           <tr>
-              <th>Course Name</th>
-              <th>Teacher</th>
-              <th>Time</th>
-              <th>Add</th>
+            <th>Course Name</th>
+            <th>Teacher</th>
+            <th>Time</th>
+            <th>Students Enrolled</th>
+            <th>Capacity</th>
           </tr>
       </thead>
       <tbody>
           {% for course in available_courses %}
           <tr>
-              <td>{{ course.name }}</td>
-              <td>{{ course.teacher }}</td>
-              <td>{{ course.time }}</td>
+            <td>{{ course['name'] }}</td>
+            <td>{{ course['teacher'] }}</td>
+            <td>{{ course['time'] }}</td>
+            <td>{{ course['student_count'] }}</td>
+            <td>{{ course['capacity'] }}</td>
               <td>
                   <form action="{{ url_for('enroll_course', course_id=course.id) }}" method="post">
                       <button type="submit">Add</button>
@@ -73,7 +76,7 @@
           </tr>
           {% else %}
           <tr>
-              <td colspan="4">No more courses available to add.</td>
+              <td colspan="4">No courses available to add.</td>
           </tr>
           {% endfor %}
       </tbody>

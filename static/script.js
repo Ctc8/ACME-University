@@ -8,10 +8,20 @@ function openTab(evt, tabName) {
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-    document.getElementById(tabName).className += " active";
-    evt.currentTarget.className += " active";
+    var tabToShow = document.getElementById(tabName);
+    if(tabToShow) {
+        tabToShow.style.display = "block";
+        evt.currentTarget.className += " active";
+    } else {
+        console.error("Tab content ID not found:", tabName);
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("defaultOpen").click();
+    var defaultTab = document.getElementById("defaultOpen");
+    if(defaultTab) {
+        defaultTab.click();
+    } else {
+        console.error("Default tab ID not found: defaultOpen");
+    }
 });
