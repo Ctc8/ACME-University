@@ -142,6 +142,19 @@ def enroll_course(course_id):
         flash('Course not found or already enrolled.', 'error')
     return redirect(url_for('dashboard'))
 
+@app.route('/drop_course/<int:course_id>', methods=['POST'])
+@login_required
+def drop_course(course_id):
+    course = Course.query.get(course_id)
+    if course and course in current_user.courses:
+        current_user.courses.remove(course)
+        db.session.commit()
+        flash('You have been dropped from the course.', 'success')
+    else:
+        flash('Course not found or not enrolled.', 'error')
+    return redirect(url_for('dashboard'))
+
+
 
 if __name__ == "__main__":
   app.run(debug=True, port=5001)

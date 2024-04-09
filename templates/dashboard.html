@@ -9,7 +9,6 @@
 <body>
   <h2>ACME University</h2>
   <h3>Welcome to your dashboard, {{ user.username }}!</h3>
-  <p>View all your classes here.</p>
 
   {% if user.is_admin %}
   <p><a href="{{ url_for('admin.index') }}">Admin Dashboard</a></p>
@@ -32,6 +31,7 @@
           <th>Teacher</th>
           <th>Time</th>
           <th>Students Enrolled</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -41,6 +41,11 @@
           <td>{{ course['teacher'] }}</td>
           <td>{{ course['time'] }}</td>
           <td>{{ course['student_count'] }}/{{ course['capacity'] }}</td>
+          <td>
+            <form action="{{ url_for('drop_course', course_id=course.id) }}" method="post">
+              <button type="submit" class="drop-button">Drop</button>
+            </form>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -59,6 +64,8 @@
                 <th>Teacher</th>
                 <th>Time</th>
                 <th>Students Enrolled</th>
+                <th>Action</th>
+
             </tr>
         </thead>
         <tbody>

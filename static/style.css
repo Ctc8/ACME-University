@@ -1,175 +1,97 @@
 body {
-  background-color: #f0f0f0;
-  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  padding: 20px;
 }
 
 h2 {
-  color: #1877F2;
-  display: flex;
-  justify-content: center;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: #007bff; 
 }
 
-h3 {
-  display: flex;
-  justify-content: center;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-}
-
-.error {
-  color: red;
-}
-
-form {
-  width: 300px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-}
-
-form p {
-  margin-bottom: 15px;
-}
-
-input[type="text"], input[type="password"] {
-  box-sizing: border-box;
-  width: 100%;
-}
-
-form input[type="submit"] {
-  background-color: #007BFF;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  display: block;
-  margin: 0 auto;
-}
-
-form input[type="submit"]:hover {
-  background-color: #0056b3;
-}
-
-a.button {
-  display: flex;
-  justify-content: center;
-  padding: 10px 20px;
-  color: white;
-  background-color: #1877F2;
-  text-decoration: none;
-  text-align: center;
-  border: none;
-  cursor: pointer;
-  font-size: 0.8em;
-}
-
-a.button:hover {
-  background-color: #1877F2;
-}
-
-.tabs, .tab-content {
-  overflow: hidden;
-  background-color: #f1f1f1;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-top: none;
-}
-
-.tab-link {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  font-size: 17px;
-  border-bottom: 3px solid transparent;
-}
-
-.tab-link:hover, .tab-link.active {
-  border-bottom: 3px solid #1877F2;
-}
-
-.tab-content.active {
-  display: block;
+h3{
+  color:black;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
-  font-size: 0.9em;
-  min-width: 400px;
-  border-radius: 5px 5px 0 0;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 0 20px rgba(0,0,0,0.15);
 }
 
 th, td {
   padding: 12px 15px;
   text-align: left;
+  border-bottom: 1px solid #dddddd;
 }
 
 th {
-  background-color: #1877F2;
+  background-color: #007bff;
   color: #ffffff;
   text-transform: uppercase;
 }
 
-tr {
-  border-bottom: 1px solid #dddddd;
+tr:hover {
+  background-color: #f2f2f2;
 }
 
-tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
+.tabs {
+  margin-top: 20px;
 }
 
-tbody tr:hover {
-  background-color: #f1f1f1;
-}
-
-tbody tr:last-of-type {
-  border-bottom: 2px solid #1877F2;
-}
-.add-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
+.tab-link {
+  background-color: #f8f9fa;
   border: none;
+  outline: none;
   cursor: pointer;
+  padding: 10px 15px;
   transition: background-color 0.3s ease;
-  font-size: 1em;
-  display: inline-block;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-link:hover, .tab-link.active {
+  background-color: #e9ecef;
+  border-bottom: 3px solid #007bff;
+}
+
+.tab-content {
+  background-color: #fff;
+  padding: 20px;
+  margin-top: -3px;
+  border: 1px solid #ddd;
+  border-top: none;
+}
+
+.add-button, .drop-button {
+  background-color: #28a745; 
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.drop-button {
+  background-color: #dc3545;
 }
 
 .add-button:hover {
-  background-color: #45a049;
+  background-color: #218838;
 }
 
-.add-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-.add-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 1em;
-  display: inline-block;
+.drop-button:hover {
+  background-color: #c82333;
 }
 
-.add-button:hover {
-  background-color: #45a049;
+.text-center {
+  text-align: center;
 }
 
-.add-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.mt-20 {
+  margin-top: 20px;
 }
