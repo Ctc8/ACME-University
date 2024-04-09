@@ -1,5 +1,4 @@
-
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_user, LoginManager, UserMixin, login_required, current_user, logout_user
 from flask_admin import Admin
@@ -59,21 +58,31 @@ def dashboard():
     if current_user.is_admin:
         return redirect(url_for('admin.index'))
     
-    user_courses = current_user.courses
+    # Fetch all courses to display under "Add Courses"
     all_courses = Course.query.all()
-    available_courses = [course for course in all_courses if course not in user_courses]
-
-    courses_info = [{
+    available_courses_info = [{
         'id': course.id,
         'name': course.name,
         'teacher': course.teacher,
         'time': course.time,
         'student_count': len(course.students),
         'capacity': course.capacity
-    } for course in user_courses]
+    } for course in all_courses if course not in current_user.courses]
+
+    # Fetch only courses the current user is enrolled in for "Your Courses"
+    enrolled_courses_info = [{
+        'id': course.id,
+        'name': course.name,
+        'teacher': course.teacher,
+        'time': course.time,
+        'student_count': len(course.students),
+        'capacity': course.capacity
+    } for course in current_user.courses]
     
-    return render_template('dashboard.html', user=current_user, courses_info=courses_info, available_courses=available_courses)
-  
+    return render_template('dashboard.html', user=current_user, 
+                           available_courses=available_courses_info, 
+                           courses_info=enrolled_courses_info)
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     error = None
@@ -120,8 +129,19 @@ def login():
   return render_template('login.html', error=error, signup_url=signup_url)
 
 @app.route('/enroll_course/<int:course_id>', methods=['POST'])
+@login_required
 def enroll_course(course_id):
-    # Implementation of enrollment logic
+    course = Course.query.get(course_id)
+    if course and not course in current_user.courses:
+        # Check if the course has reached its capacity
+        if len(course.students) < course.capacity:
+            current_user.courses.append(course)
+            db.session.commit()
+            flash('You have been enrolled in the course.', 'success')
+        else:
+            flash('This course is already at full capacity.', 'error')
+    else:
+        flash('Course not found or already enrolled.', 'error')
     return redirect(url_for('dashboard'))
 
 
@@ -133,4 +153,3 @@ if __name__ == "__main__":
       ahepworth_user.is_admin = True
       db.session.commit()
   app.run(debug=True, port=5001)
-  
