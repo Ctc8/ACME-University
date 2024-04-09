@@ -9,6 +9,7 @@
 <body>
   <h2>ACME University</h2>
   <h3>Welcome to your dashboard, {{ user.username }}!</h3>
+  <p>View all your classes here.</p>
 
   {% if user.is_admin %}
   <p><a href="{{ url_for('admin.index') }}">Admin Dashboard</a></p>
@@ -18,12 +19,12 @@
 
   <div class="tabs">
     <button class="tab-link" onclick="openTab(event, 'EnrolledCourses')" id="defaultOpen">Your Courses</button>
-    <button class="tab-link" onclick="openTab(event, 'AddCourses')">Add/Drop Courses</button>
+    <button class="tab-link" onclick="openTab(event, 'AddCourses')">Add Courses</button>
   </div>
 
   <div id="EnrolledCourses" class="tab-content">
     <h3>My Enrolled Courses</h3>
-    {% if all_courses_info|selectattr("is_enrolled", "equalto", true)|list|length > 0 %}
+    {% if courses_info %}
     <table>
       <thead>
         <tr>
@@ -34,12 +35,12 @@
         </tr>
       </thead>
       <tbody>
-        {% for course in all_courses_info if course.is_enrolled %}
+        {% for course in courses_info %}
         <tr>
-          <td>{{ course.name }}</td>
-          <td>{{ course.teacher }}</td>
-          <td>{{ course.time }}</td>
-          <td>{{ course.student_count }}/{{ course.capacity }}</td>
+          <td>{{ course['name'] }}</td>
+          <td>{{ course['teacher'] }}</td>
+          <td>{{ course['time'] }}</td>
+          <td>{{ course['student_count'] }}/{{ course['capacity'] }}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -48,46 +49,39 @@
     <p>You are not enrolled in any courses.</p>
     {% endif %}
   </div>
-  
+
   <div id="AddCourses" class="tab-content">
-    <h3>Add/Drop Courses</h3>
+    <h3>Add Courses</h3>
     <table>
-      <thead>
-        <tr>
-          <th>Course Name</th>
-          <th>Teacher</th>
-          <th>Time</th>
-          <th>Students Enrolled</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for course in all_courses_info %}
-        <tr>
-          <td>{{ course.name }}</td>
-          <td>{{ course.teacher }}</td>
-          <td>{{ course.time }}</td>
-          <td>{{ course.student_count }}/{{ course.capacity }}</td>
-          <td>
-            {% if course.is_enrolled %}
-              <form action="{{ url_for('drop_course', course_id=course.id) }}" method="post">
-                <button type="submit" class="drop-button">Drop</button>
-              </form>
+        <thead>
+            <tr>
+                <th>Course Name</th>
+                <th>Teacher</th>
+                <th>Time</th>
+                <th>Students Enrolled</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in available_courses %}
+            <tr>
+                <td>{{ course['name'] }}</td>
+                <td>{{ course['teacher'] }}</td>
+                <td>{{ course['time'] }}</td>
+                <td>{{ course['student_count'] }}/{{ course['capacity'] }}</td>
+                <td>
+                    <form action="{{ url_for('enroll_course', course_id=course.id) }}" method="post">
+                        <button type="submit" class="add-button">Add</button>
+                    </form>
+                </td>
+            </tr>
             {% else %}
-              <form action="{{ url_for('enroll_course', course_id=course.id) }}" method="post">
-                <button type="submit" class="add-button">Add</button>
-              </form>
-            {% endif %}
-          </td>
-        </tr>
-        {% else %}
-        <tr>
-          <td colspan="5">No courses available to add.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
+            <tr>
+                <td colspan="5">No courses available to add.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-  </div>
+</div>
 
   <script src="/static/script.js"></script>
 </body>
