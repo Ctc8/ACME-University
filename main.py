@@ -122,7 +122,7 @@ def signup():
 
     return render_template('signup.html')
 
-# 
+
 @app.route('/teacherdashboard')
 def teacherdashboard():
     if current_user.is_admin:
@@ -150,7 +150,7 @@ def teacherdashboard():
     return render_template('teacherdashboard.html', user=current_user, 
                            available_courses=available_courses_info, 
                            courses_info=teaching_courses_info)
-#
+
 
 @app.route('/update_grade/<int:course_id>/<int:student_id>', methods=['POST'])
 @login_required
@@ -220,6 +220,19 @@ def enroll_course(course_id):
             flash('This course is already at full capacity.', 'error')
     else:
         flash('Course not found or already enrolled.', 'error')
+    return redirect(url_for('dashboard'))
+
+
+@app.route('/drop_course/<int:course_id>', methods=['POST'])
+@login_required
+def drop_course(course_id):
+    course = Course.query.get_or_404(course_id)
+    if course in current_user.courses:
+        current_user.courses.remove(course)
+        db.session.commit()
+        flash('You have been dropped from the course successfully.', 'success')
+    else:
+        flash('You are not enrolled in this course.', 'error')
     return redirect(url_for('dashboard'))
 
 

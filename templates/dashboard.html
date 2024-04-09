@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
   <title>Dashboard</title>
 </head>
 <body>
@@ -22,33 +24,40 @@
     <button class="tab-link" onclick="openTab(event, 'AddCourses')">Add Courses</button>
   </div>
 
-  <div id="EnrolledCourses" class="tab-content">
-    <h3>My Enrolled Courses</h3>
-    {% if courses_info %}
-    <table>
-      <thead>
-        <tr>
-          <th>Course Name</th>
-          <th>Teacher</th>
-          <th>Time</th>
-          <th>Students Enrolled</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for course in courses_info %}
-        <tr>
-          <td>{{ course['name'] }}</td>
-          <td>{{ course['teacher'] }}</td>
-          <td>{{ course['time'] }}</td>
-          <td>{{ course['student_count'] }}/{{ course['capacity'] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-    <p>You are not enrolled in any courses.</p>
-    {% endif %}
-  </div>
+<div id="EnrolledCourses" class="tab-content">
+  <h3>My Enrolled Courses</h3>
+  {% if courses_info %}
+  <table>
+    <thead>
+      <tr>
+        <th>Course Name</th>
+        <th>Teacher</th>
+        <th>Time</th>
+        <th>Students Enrolled</th>
+        <th>Action</th> 
+      </tr>
+    </thead>
+    <tbody>
+      {% for course in courses_info %}
+      <tr>
+        <td>{{ course['name'] }}</td>
+        <td>{{ course['teacher'] }}</td>
+        <td>{{ course['time'] }}</td>
+        <td>{{ course['student_count'] }}/{{ course['capacity'] }}</td>
+        <td>
+          <form action="{{ url_for('drop_course', course_id=course['id']) }}" method="post">
+            <button type="submit" class="drop-button">Drop</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>You are not enrolled in any courses.</p>
+  {% endif %}
+</div>
+
 
   <div id="AddCourses" class="tab-content">
     <h3>Add Courses</h3>
@@ -59,6 +68,8 @@
                 <th>Teacher</th>
                 <th>Time</th>
                 <th>Students Enrolled</th>
+                <th>Action</th> 
+
             </tr>
         </thead>
         <tbody>
