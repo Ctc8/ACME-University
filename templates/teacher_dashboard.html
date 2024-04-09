@@ -51,33 +51,7 @@
  </div>
 
  <div id="EditGrades" class="tab-content">
-    <h3>Edit Grades</h3>
-    {% for course_info in courses_with_students %}
-    <h4>{{ course_info.course.name }}</h4>
-    <table>
-        <thead>
-            <tr>
-                <th>Student Name</th>
-                <th>Grade</th>
-                <th>Edit</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for student in course_info.students %}
-            <tr>
-                <td>{{ student.username }}</td>
-                <td>{{ course_info.grades | selectattr("user_id", "equalto", student.id) | list | first.grade }}</td>
-                <td>
-                    <form action="{{ url_for('edit_grade', course_id=course_info.course.id, student_id=student.id) }}" method="post">
-                        <input type="number" name="grade" min="0" max="100" value="{{ course_info.grades | selectattr("user_id", "equalto", student.id) | list | first.grade }}">
-                        <button type="submit">Save</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endfor %}
+   
 </div>
 
 
