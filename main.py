@@ -58,7 +58,6 @@ def dashboard():
     if current_user.is_admin:
         return redirect(url_for('admin.index'))
     
-    # Fetch all courses to display under "Add Courses"
     all_courses = Course.query.all()
     available_courses_info = [{
         'id': course.id,
@@ -69,7 +68,6 @@ def dashboard():
         'capacity': course.capacity
     } for course in all_courses if course not in current_user.courses]
 
-    # Fetch only courses the current user is enrolled in for "Your Courses"
     enrolled_courses_info = [{
         'id': course.id,
         'name': course.name,
@@ -133,7 +131,6 @@ def login():
 def enroll_course(course_id):
     course = Course.query.get(course_id)
     if course and not course in current_user.courses:
-        # Check if the course has reached its capacity
         if len(course.students) < course.capacity:
             current_user.courses.append(course)
             db.session.commit()
