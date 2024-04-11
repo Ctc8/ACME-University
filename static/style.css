@@ -1,142 +1,183 @@
 body {
-    background-color: #f7f9fc;
-    font-family: 'Segoe UI', 'Roboto', sans-serif;
-    color: #626e78;
-    line-height: 1.6;
-    padding: 20px;
-    margin: 0;
+	background-color: #f7f9fc;
+	font-family: "Segoe UI", "Roboto", sans-serif;
+	color: #626e78;
+	line-height: 1.6;
+	padding: 20px;
+	margin: 0;
 }
 
 h2 {
-    color: #1877f2;
-    text-align: center;
+	color: #1877f2;
+	text-align: center;
 }
 
 h3 {
-    color: #333;
-    text-align: center;
+	color: #333;
+	text-align: center;
 }
 
 a {
-    color: #3498db;
-    text-decoration: none;
+	color: #3498db;
+	text-decoration: none;
 }
 
 .tabs,
 .tab-content {
-    overflow: hidden;
-    background-color: #f1f1f1;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-top: none;
+	overflow: hidden;
+	background-color: #f1f1f1;
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-top: none;
 }
 
 .tab-link {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    font-size: 17px;
-    border-bottom: 3px solid transparent;
+	background-color: inherit;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	transition: 0.3s;
+	font-size: 17px;
+	border-bottom: 3px solid transparent;
 }
 
 .tab-link:hover,
 .tab-link.active {
-    border-bottom: 3px solid #3498db;
+	border-bottom: 3px solid #3498db;
 }
 
 .tab-content.active {
-    display: block;
+	display: block;
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px;
 }
 
-th, td {
-    text-align: left;
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
+th,
+td {
+	text-align: left;
+	padding: 12px;
+	border-bottom: 1px solid #ddd;
 }
 
 th {
-    background-color: #3498db;
-    color: white;
+	background-color: #3498db;
+	color: white;
 }
 
 tr:hover {
-    background-color: #f4f4f4;
+	background-color: #f4f4f4;
 }
 
-.add-button, .drop-button {
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    transition: 0.4s;
-    cursor: pointer;
-    border-radius: 50px;
+.add-button,
+.drop-button {
+	border: none;
+	color: white;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	transition: 0.4s;
+	cursor: pointer;
+	border-radius: 50px;
 }
+
 
 .add-button {
-    background-color: #2ecc71;
+	background-color: #2ecc71;
 }
 
 .add-button:hover {
-    background-color: #27ae60;
+	background-color: #27ae60;
 }
 
 .drop-button {
-    background-color: #e74c3c;
+	background-color: #e74c3c;
 }
 
 .drop-button:hover {
-    background-color: #c0392b;
+	background-color: #c0392b;
 }
 
 @media (max-width: 768px) {
-    .tabs, .tab-link {
-        width: 100%;
-        display: block;
-    }
+	.tabs,
+	.tab-link {
+		width: 100%;
+		display: block;
+	}
 
-    table, thead, tbody, th, td, tr { 
-        display: block;
-    }
+	table,
+	thead,
+	tbody,
+	th,
+	td,
+	tr {
+		display: block;
+	}
 
-    thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
+	thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
 
-    tr { border: 1px solid #ccc; }
+	tr {
+		border: 1px solid #ccc;
+	}
 
-    td {
-        border: none;
-        border-bottom: 1px solid #eee;
-        position: relative;
-        padding-left: 50%;
-    }
+	td {
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 50%;
+	}
 
-    td:before {
-        position: absolute;
-        top: 6px;
-        left: 6px;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-        content: attr(data-label);
-        color: #626e78;
-        font-weight: bold;
-    }
+	td:before {
+		position: absolute;
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+		content: attr(data-label);
+		color: #626e78;
+		font-weight: bold;
+	}
+}
+
+form {
+	background-color: #f8f9fa; 
+	padding: 20px; 
+	border-radius: 5px; 
+	width: 30%; 
+	margin: 0 auto; 
+	box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1); 
+}
+
+input,
+textarea,
+select {
+	width: 100%; 
+	padding: 10px; 
+	margin-bottom: 10px; 
+	border-radius: 5px; 
+	border: 1px solid #ddd;
+	box-sizing: border-box; 
+}
+
+input[type="submit"] {
+	background-color: #007bff; 
+	color: white; 
+	cursor: pointer; 
+}
+
+input[type="submit"]:hover {
+	background-color: #0056b3; 
 }
